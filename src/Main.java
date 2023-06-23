@@ -1,4 +1,5 @@
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.swing.*;
 
 public class Main {
@@ -10,6 +11,9 @@ public class Main {
     public static int countOfTsarBimba = 0;
     public static JFrame mainFrame = new JFrame();
     private static Clip clip;
+    private static Settings settings = new Settings();
+    private static Menu menu = new Menu();
+    private static Store store = new Store();
 }
 
     public static void main(String[] args) {
@@ -67,4 +71,39 @@ public class Main {
         });
         openMenu();
         mainFrame.setVisible(true);
+    }
+
+    public static void setVolume(double volume){
+        FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        control.setValue(20f * (float) Math.log10(0.01 * volume));
+    }
+
+    public static void openMenu(){
+        menu.updateCoins();
+        mainFrame.add(menu);
+        reload();
+    }
+
+    public static void openSettings(){
+        mainFrame.add(settings);
+        reload();
+    }
+
+    public static void openStore(){
+        store.updateCounters();
+        mainFrame.add(store);
+        reload();
+    }
+
+    public static void openPlay(){
+        if (botMode == 1)
+            mainFrame.add(new Play());
+        else
+            mainFrame.add(new PlayWithFriend());
+        reload();
+    }
+
+    public static void reload(){
+        mainFrame.getGlassPane().setVisible(false);
+        mainFrame.getGlassPane().setVisible(true);
     }
